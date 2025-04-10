@@ -1,0 +1,61 @@
+name: Tag on merge
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true  && ${{ github.base_ref }} == "main" 
+    runs-on: ubuntu-latest
+    env: 
+          REF: ${{ github.base_ref }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Get old tag
+      shell: bash
+      run: |
+        git fetch --all --unshallow
+        if tag=$(git describe --tags --abbrev=0 2>/dev/null);then
+          echo "Found tag $tag"
+          major=$(echo $tag | cut -d '.' -f 1)
+          minor=$(echo $tag | cut -d '.' -f 2)
+          patch=$(echo $tag | cut -d '.' -f 3)
+          echo "MAJOR=$major" >> $GITHUB_ENV
+          echo "MINOR=$minor" >> $GITHUB_ENV
+          echo "PATCH=$patch" >> $GITHUB_ENV
+        else
+          echo "MAJOR=0" >> $GITHUB_ENV
+          echo "MINOR=0" >> $GITHUB_ENV
+          echo "PATCH=0" >> $GITHUB_ENV
+        fi
+    - if: contains(github.event.pull_request.labels.*.name, 'major')
+      name: "Increment Major"
+      shell:  bash
+      run: |
+        major=$((MAJOR+1))
+        echo "TAG=$major.0.0" >> $GITHUB_ENV
+    - if: contains(github.event.pull_request.labels.*.name, 'minor')
+      name: "Increment Minor"
+      shell:  bash
+      run: |
+        minor=$((MINOR+1))
+        echo "TAG=$MAJOR.$minor.0" >> $GITHUB_ENV
+    - if: contains(github.event.pull_request.labels.*.name, 'patch')
+      name: "Increment Patch"
+      shell:  bash
+      run: |
+        patch=$((PATCH+1))
+        echo "TAG=$MAJOR.$MINOR.$patch" >> $GITHUB_ENV
+    - name: Create new tag
+      shell: bash
+      run: |
+        if [ ! $TAG ];then
+          echo "No tagging required"
+          exit 0
+        fi
+        echo "Creating new tag $TAG"
+        git tag $TAG
+        git push origin $TAG
+      
