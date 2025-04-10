@@ -29,3 +29,12 @@ def test_get_head_commit(path,expected):
     else:
         with raises(Exception):
             get_head_commit(path)
+
+@mark.parametrize("path,expected",git_repos)
+def test_write_logs_integration(path,expected):
+    if expected:
+        write_logs(path)
+        assert True
+    else:
+        with raises(Exception):
+            write_logs(path)
