@@ -3,9 +3,9 @@ from pytest import mark,raises
 from pathlib import Path
 
 git_repos=[
-                     (Path.cwd().as_posix(),True),
-                     (Path.cwd().parent.as_posix(),False)
-                 ]
+            (Path.cwd().as_posix(),True),
+            (Path.cwd().parent.as_posix(),False)
+        ]
 
 @mark.parametrize("path,expected",git_repos)
 def test_write_logs(path,expected):
