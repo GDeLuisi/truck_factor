@@ -9,6 +9,11 @@ authors = [
 requires-python = ">=3.12"
 dependencies = []
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = "error"
+xfail_strict = true
+
 [project.scripts]
 truck-factor-gdeluisi = "truck_factor_gdeluisi:main"
 
