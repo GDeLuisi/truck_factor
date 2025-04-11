@@ -70,7 +70,7 @@ def _log_builder(repo:str,commit:str,pretty:Optional[str]=None,merges:bool=False
     if max_count!=None:
         arg_list.append(f"--max-count={max_count}")
     if skip!=None:
-        arg_list.append(f"--max-count={skip}")
+        arg_list.append(f"--skip={skip}")
     if merges:
         arg_list.append("--no-merges")
     if pretty!=None:
