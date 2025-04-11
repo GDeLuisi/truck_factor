@@ -28,19 +28,19 @@ def write_logs(path:str,commit_sha:Optional[str]=None)->str:
     c_slice=floor(no_commits/max_worker)
     cmds=[]
     for i in range(max_worker):
-        cmds.append(_cmd_builder("log",repo,head,r'format:%h|%an|%ad',False,c_slice,i*c_slice,"--date=short","--num-stat","--all"))
+        cmds.append(_log_builder(repo,head,r'format:%h|%an|%ad',False,c_slice,i*c_slice,None,None,"--date=short","--numstat","--all"))
     with ThreadPoolExecutor(max_workers=max_worker) as executor:
         worker=partial(subprocess.check_output,shell=True)
         results=executor.map(worker,cmds)
     return "\n".join([r.decode() for r in results])
 
-#TODO: factorize for command specific
-def _cmd_builder(command:str,repo:str,commit:Optional[str]=None,pretty:Optional[str]=None,merges:bool=False,max_count:Optional[int]=None,skip:Optional[int]=None,*args):
-    arg_string=f"git -C {repo} {command} "
-    if not commit:
-        commit=get_head_commit()
-    arg_string=arg_string + commit
-    arg_list=[command]
+def _cmd_builder(command:str,repo:str,*args):
+    arg_string=f"git -C {repo} {command}"
+    arg_string=arg_string + " "+ " ".join(args)
+    return arg_string
+
+def _log_builder(repo:str,commit:str,pretty:Optional[str]=None,merges:bool=False,max_count:Optional[int]=None,skip:Optional[int]=None,author:Optional[str]=None,follow:Optional[str]=None,*args)->str:
+    arg_list=[commit]
     if max_count!=None:
         arg_list.append(f"--max-count={max_count}")
     if skip!=None:
@@ -49,8 +49,12 @@ def _cmd_builder(command:str,repo:str,commit:Optional[str]=None,pretty:Optional[
         arg_list.append("--no-merges")
     if pretty!=None:
         arg_list.append(f'--pretty="format:{pretty}"')
-    arg_string=arg_string + " "+ " ".join(arg_list) + " " +" ".join(args)
-    return arg_string
+    if author!=None:
+        arg_list.append(f'--author="{author}"')
+    arg_list.extend(args)
+    if follow!=None:
+        arg_list.append(f'--follow -- "{follow}"')
+    return _cmd_builder("log",repo,*arg_list)
 
 def clear_files_aliases():
     pass
