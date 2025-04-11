@@ -23,6 +23,27 @@ def test_write_logs(path,expected):
         with raises(Exception):
             write_logs(path,"HEAD")
 
+@mark.parametrize("iterable,n,expected",[
+    (list(range(150000)),10,True),
+    ([],10,False),
+    (list(range(150000)),0,False),
+    (list(range(150000)),None,False),
+    (None,10,False),
+])
+def test_create_batches(iterable,n,expected):
+    if expected:
+        tmp=list(iterable)
+        n_batches=ceil(len(tmp)/n)
+        batches=create_batches(iterable,n)
+        assert n_batches==len(batches)
+        rec_iterable=[]
+        for b in batches:
+            rec_iterable.extend(b)
+        assert sorted(tmp)==sorted(rec_iterable)
+    else:
+        with raises(ValueError):
+            create_batches(iterable,n)
+            
 def test_is_git_available():
     
     assert is_git_available()

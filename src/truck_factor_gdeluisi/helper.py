@@ -5,7 +5,6 @@ import os
 import subprocess
 from typing import Optional
 import pandas as pd
-import itertools
 from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 from math import floor,ceil
 from functools import partial
@@ -139,7 +138,22 @@ def get_head_commit(path:str)->str:
     cmd = f"git -C {Path(path).resolve().as_posix()} rev-parse HEAD"
     return subprocess.check_output(cmd,shell=True).decode()[:-1]
 
-def parse_block(block:str,exts:Optional[set[str]]=None)->list[dict[str]]:
+def create_batches(it:Iterable,n:int)->Iterable[Iterable]:
+    if not n:
+        raise ValueError("n must be at least 1")
+    if not it:
+        raise ValueError("Iterable cannot be None or empty")
+    batches=[]
+    tmp=list(it)
+    n_items=len(tmp)
+    if n_items==0:
+        raise ValueError("Iterable must not be empty")
+    n_batches=ceil(n_items/n)
+    for i in range(0,n_items,n):
+        batches.append(tmp[i:i+n])
+    return tuple(batches)
+
+def parse_block(block:str)->list[dict[str]]:
     contributions=dict()
     tmp=block.split("\n",1)
     if len(tmp)==1:
@@ -167,7 +181,7 @@ def _parse_logs(blocks:list[str])->list[str]:
 def parse_logs(logs:str)->list[dict[str]]:
     contributions=[]
     blocks=logs.split('\n\n')
-    batches=itertools.batched(blocks,ceil(len(blocks)/max_worker))
+    batches=create_batches(blocks,ceil(len(blocks)/max_worker))
     with ThreadPoolExecutor(max_worker) as executor:
         results=executor.map(_parse_logs,batches)
     for r in results:
