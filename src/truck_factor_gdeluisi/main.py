@@ -1,5 +1,6 @@
 
 from tempfile import gettempdir
 
-TMP=gettempdir()
 
+def resolve_aliases():
+    pass

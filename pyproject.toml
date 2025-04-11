@@ -7,7 +7,9 @@ authors = [
     { name = "Gerardo De Luisi", email = "deluisigerardo@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pandas"
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

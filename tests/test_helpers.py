@@ -9,7 +9,7 @@ git_repos=[
             (Path.cwd().as_posix(),True),
             (Path.cwd().parent.as_posix(),False),
             # (Path.cwd().parent.joinpath("project_visualization_tool").as_posix(),True)
-            (Path.cwd().parent.joinpath("pandas").as_posix(),True)
+            # (Path.cwd().parent.joinpath("pandas").as_posix(),True)
         ]
 
 logger=getLogger()
@@ -84,9 +84,9 @@ def test_infer_programming_language():
 def test_parse_logs():
     # commit="0cb8f542538a6a53c8646da7d171e5bfec40ac1a"
     commit="HEAD"
-    # res_df=parse_logs(write_logs(Path.cwd().as_posix(),commit))
-    res_df=parse_logs(write_logs(Path.cwd().parent.joinpath("pandas").as_posix(),commit))
+    res_df=parse_logs(write_logs(Path.cwd().as_posix(),commit))
+    # res_df=parse_logs(write_logs(Path.cwd().parent.joinpath("pandas").as_posix(),commit))
     
-    # with open("./test_logs.json","w",encoding="utf-8") as f:
-    #     print(res_df,file=f)
+    with open("./test_logs.json","w",encoding="utf-8") as f:
+        print(res_df,file=f)
     assert True
