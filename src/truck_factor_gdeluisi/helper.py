@@ -34,12 +34,36 @@ def write_logs(path:str,commit_sha:Optional[str]=None)->str:
         results=executor.map(worker,cmds)
     return "\n".join([r.decode() for r in results])
 
-def _cmd_builder(command:str,repo:str,*args):
+def _cmd_builder(command:str,repo:str,*args)->str:
+    """Base git command generator
+
+    Args:
+        command (str): command to use
+        repo (str): git directory to execute the command on
+
+    Returns:
+        str: The complete command as a string
+    """
     arg_string=f"git -C {repo} {command}"
     arg_string=arg_string + " "+ " ".join(args)
     return arg_string
 
 def _log_builder(repo:str,commit:str,pretty:Optional[str]=None,merges:bool=False,max_count:Optional[int]=None,skip:Optional[int]=None,author:Optional[str]=None,follow:Optional[str]=None,*args)->str:
+    """Builds the complete command string for a log command
+
+    Args:
+        repo (str): Git repository to execute the command on
+        commit (str): The commit from which start the logging operation
+        pretty (Optional[str], optional): The format used by --pretty. Defaults to None.
+        merges (bool, optional): Specifies whether load merge commits. Defaults to False.
+        max_count (Optional[int], optional): Paramenter for --max-count flag. Defaults to None.
+        skip (Optional[int], optional): Parameter  for --skip flag. Defaults to None.
+        author (Optional[str], optional): Filter only commits coming authored by the passed author. Defaults to None.
+        follow (Optional[str], optional): Filter only commits which changed the passed file. Defaults to None.
+
+    Returns:
+        str: Returns the git command string
+    """
     arg_list=[commit]
     if max_count!=None:
         arg_list.append(f"--max-count={max_count}")
@@ -60,13 +84,20 @@ def clear_files_aliases():
     pass
 
 def count_commits(path:str,commit_sha:Optional[str]=None)->int:
+    """Counts all commits reachable from a certain revision (merges excluded)
+
+    Args:
+        path (str): Path to git repository
+        commit_sha (Optional[str], optional): Commit's hash value. Defaults to None.
+
+    Returns:
+        int: number of revisions counted'
+    """
     repo=Path(path).resolve().as_posix()
     head=commit_sha
     if not commit_sha:
         head=get_head_commit(path)
-    
-    cmd=f"git -C {repo} rev-list {head} --count --all --no-merges"
-    
+    cmd=_cmd_builder("rev-list",repo,head, "--count", "--all" ,"--no-merges")
     return int(subprocess.check_output(cmd,shell=True).decode()[:-1])
     
 
