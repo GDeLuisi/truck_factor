@@ -1,0 +1,321 @@
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+80	8	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+80	8	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-10
+3	3	tests/test_helpers.py
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+80	8	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-10
+3	3	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+1	2	src/truck_factor_gdeluisi/__init__.py
+55	0	src/truck_factor_gdeluisi/helper.py
+5	0	src/truck_factor_gdeluisi/main.py
+9	0	tests/test_helpers.py
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+80	8	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-10
+3	3	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+1	2	src/truck_factor_gdeluisi/__init__.py
+55	0	src/truck_factor_gdeluisi/helper.py
+5	0	src/truck_factor_gdeluisi/main.py
+9	0	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+5	0	pyproject.toml
+31	0	tests/test_helpers.py
+0	0	tests/test_truckfactor.py
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+80	8	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-10
+3	3	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+1	2	src/truck_factor_gdeluisi/__init__.py
+55	0	src/truck_factor_gdeluisi/helper.py
+5	0	src/truck_factor_gdeluisi/main.py
+9	0	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+5	0	pyproject.toml
+31	0	tests/test_helpers.py
+0	0	tests/test_truckfactor.py
+
+Gerardo De Luisi|2025-04-10
+111	0	.github/workflows/publist_pypi.yml
+61	0	.github/workflows/tag_on_merge.yaml
+157	0	.github/workflows/test-dev.yml
+111	0	.github/workflows/testpypi_publish.yml
+1	0	.python-version
+17	0	pyproject.toml
+3	0	src/truck_factor_gdeluisi/__init__.py
+0	0	tests/__init__.py
+0	0	tests/test_truckfactor.py
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+80	8	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-10
+3	3	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+1	2	src/truck_factor_gdeluisi/__init__.py
+55	0	src/truck_factor_gdeluisi/helper.py
+5	0	src/truck_factor_gdeluisi/main.py
+9	0	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+5	0	pyproject.toml
+31	0	tests/test_helpers.py
+0	0	tests/test_truckfactor.py
+
+Gerardo De Luisi|2025-04-10
+111	0	.github/workflows/publist_pypi.yml
+61	0	.github/workflows/tag_on_merge.yaml
+157	0	.github/workflows/test-dev.yml
+111	0	.github/workflows/testpypi_publish.yml
+1	0	.python-version
+17	0	pyproject.toml
+3	0	src/truck_factor_gdeluisi/__init__.py
+0	0	tests/__init__.py
+0	0	tests/test_truckfactor.py
+
+GeggeDL|2025-04-10
+174	0	.gitignore
+21	0	LICENSE
+1	0	README.md
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+80	8	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-10
+3	3	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+1	2	src/truck_factor_gdeluisi/__init__.py
+55	0	src/truck_factor_gdeluisi/helper.py
+5	0	src/truck_factor_gdeluisi/main.py
+9	0	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+5	0	pyproject.toml
+31	0	tests/test_helpers.py
+0	0	tests/test_truckfactor.py
+
+Gerardo De Luisi|2025-04-10
+111	0	.github/workflows/publist_pypi.yml
+61	0	.github/workflows/tag_on_merge.yaml
+157	0	.github/workflows/test-dev.yml
+111	0	.github/workflows/testpypi_publish.yml
+1	0	.python-version
+17	0	pyproject.toml
+3	0	src/truck_factor_gdeluisi/__init__.py
+0	0	tests/__init__.py
+0	0	tests/test_truckfactor.py
+
+GeggeDL|2025-04-10
+174	0	.gitignore
+21	0	LICENSE
+1	0	README.md
+
+Gerardo De Luisi|2025-04-11
+3	1	pyproject.toml
+1	0	requirements.txt
+1	0	src/truck_factor_gdeluisi/data/ext.json
+0	162	src/truck_factor_gdeluisi/helper.py
+2	1	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.txt
+56	4	tests/test_helpers.py
+
+GDeLuisi|2025-04-11
+35	4	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-11
+14	10	src/truck_factor_gdeluisi/helper.py
+
+Gerardo De Luisi|2025-04-11
+80	8	src/truck_factor_gdeluisi/helper.py
+
+GDeLuisi|2025-04-10
+3	3	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+1	2	src/truck_factor_gdeluisi/__init__.py
+55	0	src/truck_factor_gdeluisi/helper.py
+5	0	src/truck_factor_gdeluisi/main.py
+9	0	tests/test_helpers.py
+
+GDeLuisi|2025-04-10
+5	0	pyproject.toml
+31	0	tests/test_helpers.py
+0	0	tests/test_truckfactor.py
+
+Gerardo De Luisi|2025-04-10
+111	0	.github/workflows/publist_pypi.yml
+61	0	.github/workflows/tag_on_merge.yaml
+157	0	.github/workflows/test-dev.yml
+111	0	.github/workflows/testpypi_publish.yml
+1	0	.python-version
+17	0	pyproject.toml
+3	0	src/truck_factor_gdeluisi/__init__.py
+0	0	tests/__init__.py
+0	0	tests/test_truckfactor.py
+
+GeggeDL|2025-04-10
+174	0	.gitignore
+21	0	LICENSE
+1	0	README.md
+

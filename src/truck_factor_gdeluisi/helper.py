@@ -7,8 +7,10 @@ from typing import Optional
 import pandas as pd
 import itertools
 from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
-from math import floor
+from math import floor,ceil
 from functools import partial
+from typing import Iterable
+import json
 max_worker = min(32,os.cpu_count())
 def write_logs(path:str,commit_sha:Optional[str]=None)->str:
     """Generates formatted logs
@@ -25,14 +27,14 @@ def write_logs(path:str,commit_sha:Optional[str]=None)->str:
     if not commit_sha:
         head=get_head_commit(path)
     no_commits=count_commits(repo,head)
-    c_slice=floor(no_commits/max_worker)
+    c_slice=ceil(no_commits/max_worker)
     cmds=[]
     for i in range(max_worker):
-        cmds.append(_log_builder(repo,head,r'format:%h|%an|%ad',False,c_slice,i*c_slice,None,None,"--date=short","--numstat","--all"))
+        cmds.append(_log_builder(repo,head,r'%an|%ad',False,c_slice,i*c_slice,None,None,"--date=short","--numstat","--all"))
     with ThreadPoolExecutor(max_workers=max_worker) as executor:
         worker=partial(subprocess.check_output,shell=True)
         results=executor.map(worker,cmds)
-    return "\n".join([r.decode() for r in results])
+    return "\n".join([r.decode() for r in results])[1:]
 
 def _cmd_builder(command:str,repo:str,*args)->str:
     """Base git command generator
@@ -137,26 +139,61 @@ def get_head_commit(path:str)->str:
     cmd = f"git -C {Path(path).resolve().as_posix()} rev-parse HEAD"
     return subprocess.check_output(cmd,shell=True).decode()[:-1]
 
-def parse_block(block:str,exts:Optional[set[str]]=None)->dict:
-    #GeggeDL|2025-04-10\n174\t0\t.gitignore\n21\t0\tLICENSE\n1\t0\tREADME.md
+def parse_block(block:str,exts:Optional[set[str]]=None)->list[dict[str]]:
     contributions=dict()
-    author,stat_block=block.split("\n",1)
+    tmp=block.split("\n",1)
+    if len(tmp)==1:
+        return []
+    c_line,stat_block=tmp
+    author,date=c_line.split("|")
     block_lines=stat_block.split("\n")
-    contributions[author]=dict(inserted=0,deleted=0)
+    contributions=[]
     for line in block_lines:
-        inserted,deleted,fname=line.split('\t')
-        f_split=fname.rsplit(".",1)
-        if len(f_split)==2 and f_split[1] in exts:
-            contributions[author]["inserted"]+=int(inserted)
-            contributions[author]["deleted"]+=int(deleted)
-        
-def parse_logs(logs:str)->pd.DataFrame:
-    #d60e612|GDeLuisi|2025-04-10
-    # 1       2       src/truck_factor_gdeluisi/__init__.py
-    # 55      0       src/truck_factor_gdeluisi/helper.py
-    blocks=logs.split('\n\n')
-    
-    
+        try:
+            inserted,deleted,fname=line.split('\t')
+            inserted=int(inserted) if inserted!="-" else 0 
+            deleted=int(deleted) if deleted!="-" else 0 
+            contributions.append(dict(author=author,date=date,fname=fname,inserted=inserted,deleted=deleted,tot_contributions=inserted+deleted))
+        except ValueError:
+            continue
+    return contributions
 
-def infer_programming_language(files:list[str])->set[str]:
-    pass
+def _parse_logs(blocks:list[str])->list[str]:
+    contr=[]
+    for block in blocks:
+        contr.extend(parse_block(block))
+    return contr
+
+def parse_logs(logs:str)->list[dict[str]]:
+    contributions=[]
+    blocks=logs.split('\n\n')
+    batches=itertools.batched(blocks,ceil(len(blocks)/max_worker))
+    with ThreadPoolExecutor(max_worker) as executor:
+        results=executor.map(_parse_logs,batches)
+    for r in results:
+        contributions.extend(r)
+    return contributions
+
+def infer_programming_language(files:Iterable[str],threshold:float=0.35)->set[str]:
+        suffix_count:dict[str,int]=dict()
+        fs=set(files)
+        tot_files=len(fs)
+        ret_suffixes=set()
+        for file in fs:
+            try:
+                suffix=file.rsplit(".",maxsplit=1)[1]
+                if suffix not in suffix_count:
+                    suffix_count[suffix]=0
+                suffix_count[suffix]+=1
+            except IndexError:
+                pass
+        for suff,count in suffix_count.items():
+            if float(count/tot_files) >= threshold:
+                ret_suffixes.add("."+suff)
+        return ret_suffixes
+    
+def resolve_programming_languages(exts:Iterable[str])->set[str]:
+    config_file=Path(__file__).parent.joinpath("data","ext.json")
+    with config_file.open("r") as f:
+        config=json.load(f)
+    return {ext for ext in exts if ext in config}
