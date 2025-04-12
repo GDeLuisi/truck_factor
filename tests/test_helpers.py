@@ -3,13 +3,14 @@ from pytest import mark,raises
 from pathlib import Path
 import pandas as pd
 from logging import getLogger
+import subprocess
 from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 
 git_repos=[
-            (Path.cwd().as_posix(),True),
-            (Path.cwd().parent.as_posix(),False),
-            # (Path.cwd().parent.joinpath("project_visualization_tool").as_posix(),True)
-            # (Path.cwd().parent.joinpath("pandas").as_posix(),True)
+            # (Path.cwd().as_posix(),True),
+            # (Path.cwd().parent.as_posix(),False),
+            (Path.cwd().parent.joinpath("project_visualization_tool").as_posix(),True),
+            (Path.cwd().parent.joinpath("pandas").as_posix(),True)
         ]
 
 logger=getLogger()
@@ -22,7 +23,20 @@ def test_write_logs(path,expected):
     else:
         with raises(Exception):
             write_logs(path,"HEAD")
-
+            
+@mark.parametrize("path,expected",git_repos)
+def test_get_aliases(path,expected):
+    if expected:
+        current_files=set(subprocess.check_output(f"git -C {path} ls-files",shell=True).decode()[:-1].split('\n'))
+        alias_map_values=set(get_aliases(path,"HEAD").values())
+        print(current_files)
+        print("#############################################")
+        print(alias_map_values)
+        assert alias_map_values.issubset(current_files)
+    else:
+        with raises(Exception):
+            get_aliases(path,"HEAD")
+            
 @mark.parametrize("iterable,n,expected",[
     (list(range(150000)),10,True),
     ([],10,False),

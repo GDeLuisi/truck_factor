@@ -33,8 +33,62 @@ def write_logs(path:str,commit_sha:Optional[str]=None)->str:
     with ThreadPoolExecutor(max_workers=max_worker) as executor:
         worker=partial(subprocess.check_output,shell=True)
         results=executor.map(worker,cmds)
-    return "\n".join([r.decode() for r in results])[1:]
+    return "\n".join([r.decode() for r in results])
 
+def get_aliases(path:str,commit_sha:Optional[str]=None)->dict[str]:
+    # git log --diff-filter=R --name-status --pretty=format:
+    repo=Path(path).resolve().as_posix()
+    head=commit_sha
+    if not commit_sha:
+        head=get_head_commit(path)
+    no_commits=count_commits(repo,head)
+    c_slice=ceil(no_commits/max_worker)
+    cmds=[]
+    alias_map=dict()
+    current_files=set(subprocess.check_output(_cmd_builder("ls-files",repo=repo),shell=True).decode()[:-1].split('\n'))
+    for i in range(max_worker):
+        cmds.append(_log_builder(repo,head,'',False,c_slice,i*c_slice,None,None,"--name-status","--all","--diff-filter=R"))
+    with ThreadPoolExecutor(max_workers=max_worker) as executor:
+        worker=partial(subprocess.check_output,shell=True)
+        results=executor.map(worker,cmds)
+    blocks:list[str]=[]
+    for res in results:
+        b=res.decode().split("\n\n")
+        for l_block in b:
+            lines=l_block.split("\n")
+            blocks.extend(lines)
+    for b in blocks:
+        if b=="":
+            continue
+        try:
+            _,old,new=b.split("\t")
+            alias_map[old]=new.strip("\n")
+        except ValueError:
+            print([b])
+            return dict()
+    final_alias_map=dict()
+    for k,v in alias_map.items():
+        if v in alias_map:
+            #reconstruct reference chain
+            to_add={k}
+            tmp_v=v
+            while tmp_v not in current_files:
+                to_add.add(tmp_v)
+                try:
+                    tmp_v=alias_map[tmp_v]
+                    if tmp_v in to_add:
+                        raise KeyError()
+                except KeyError:
+                    to_add=set()
+                    break
+            final_v=tmp_v
+            for k_v in to_add:
+                final_alias_map[k_v]=final_v
+        elif v in current_files:
+            final_alias_map[k]=v
+
+    return final_alias_map
+        
 def _cmd_builder(command:str,repo:str,*args)->str:
     """Base git command generator
 
