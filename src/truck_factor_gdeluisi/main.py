@@ -77,7 +77,6 @@ def compute_DOA(contributions:pd.DataFrame)->pd.DataFrame:
         per_author_df.loc[mask,"DOA"]=normalized_doas
     return per_author_df
 
-
 def compute_truck_factor(repo:str,orphan_files_threashold:float=0.5,authorship_threshold:float=0.7)->int:
     if not( (orphan_files_threashold >0 and orphan_files_threashold <=1 ) and (authorship_threshold >0 and authorship_threshold <=1 )):
         raise ValueError("All threshold values must have a value between 0 and 1")
@@ -87,6 +86,12 @@ def compute_truck_factor(repo:str,orphan_files_threashold:float=0.5,authorship_t
     if not is_dir_a_repo(repo):
         raise ValueError(f"Path {repo} is not a git directory")
     df=create_contribution_dataframe(repo)
+    return compute_truck_factor_from_contributions
+    
+def compute_truck_factor_from_contributions(df:pd.DataFrame,orphan_files_threashold:float=0.5,authorship_threshold:float=0.7)->int:
+    if not( (orphan_files_threashold >0 and orphan_files_threashold <=1 ) and (authorship_threshold >0 and authorship_threshold <=1 )):
+        raise ValueError("All threshold values must have a value between 0 and 1")
+    #https://arxiv.org/abs/1604.06766
     if df.empty:
         raise ValueError("Repository not suited for truck factor calculation, no source code found")
     df=compute_DOA(df)
