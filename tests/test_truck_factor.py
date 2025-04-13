@@ -27,13 +27,8 @@ def test_contribution_df(path,expected):
 @mark.parametrize("path,expected",git_repos)
 def test_compute_tf(path,expected):
     if expected:
-        # current_files=set(subprocess.check_output(f"git -C {path} ls-files",shell=True).decode()[:-1].split('\n'))
-        # df=create_contribution_dataframe(path)
-        # df.info()
-        # assert set(df["fname"].to_list()).issubset(current_files)
         tf=compute_truck_factor(path)
         print(tf)
-        # assert tf == expected
     else:
         with raises(Exception):
-            compute_DOA(create_contribution_dataframe(path))
+            compute_truck_factor(path)

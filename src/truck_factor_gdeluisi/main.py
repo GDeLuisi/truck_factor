@@ -82,6 +82,8 @@ def compute_truck_factor(repo:str,orphan_files_threashold:float=0.5,authorship_t
     if not( (orphan_files_threashold >0 and orphan_files_threashold <=1 ) and (authorship_threshold >0 and authorship_threshold <=1 )):
         raise ValueError("All threshold values must have a value between 0 and 1")
     #https://arxiv.org/abs/1604.06766
+    if not is_git_available():
+        raise Exception("No git CLI found on PATH")
     if not is_dir_a_repo(repo):
         raise ValueError(f"Path {repo} is not a git directory")
     df=create_contribution_dataframe(repo)

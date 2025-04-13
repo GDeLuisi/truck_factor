@@ -133,12 +133,3 @@ def test_parse_logs(path,expected):
         with raises(Exception):
             parse_logs(write_logs(Path.cwd().as_posix(),commit))
             
-            
-@mark.parametrize("path,expected",git_repos)
-def test_repo_is_empty(path,expected):
-    if expected:
-        assert not is_repo_empty(path)
-    else:
-        with raises(Exception):
-            is_repo_empty(path)
-            

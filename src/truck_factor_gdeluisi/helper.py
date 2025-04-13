@@ -242,9 +242,6 @@ def parse_logs(logs:str)->list[dict[str]]:
         contributions.extend(r)
     return contributions
 
-def is_repo_empty(path:str):
-    repo=Path(path).resolve().as_posix()
-    return subprocess.check_call(f"git -C {repo} rev-parse HEAD") != 0
 def infer_programming_language(files:Iterable[str])->set[str]:
         fs=set(files)
         ret_suffixes=set()
