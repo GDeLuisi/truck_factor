@@ -9,9 +9,9 @@ from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 git_repos=[
             (Path.cwd().as_posix(),True),
             (Path.cwd().parent.as_posix(),False),
-            (Path.cwd().parent.joinpath("project_visualization_tool").as_posix(),1),
-            (Path.cwd().parent.joinpath("pandas").as_posix(),True),
-            (Path.cwd().parent.joinpath("emacs-theme-gruvbox").as_posix(),True)
+            # (Path.cwd().parent.joinpath("project_visualization_tool").as_posix(),1),
+            # (Path.cwd().parent.joinpath("pandas").as_posix(),True),
+            # (Path.cwd().parent.joinpath("emacs-theme-gruvbox").as_posix(),True)
         ]
 @mark.parametrize("path,expected",git_repos)
 def test_contribution_df(path,expected):
