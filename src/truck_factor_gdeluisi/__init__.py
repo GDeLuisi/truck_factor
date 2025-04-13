@@ -1,3 +1,5 @@
 from importlib.metadata import version
-
-__version__=version(__package__)
+try:
+    __version__=version(__package__) 
+except Exception:
+    __version__="not available"
