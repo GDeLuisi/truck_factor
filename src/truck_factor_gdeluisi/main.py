@@ -53,6 +53,14 @@ def _compute_DOA(row:pd.Series,kwargs:dict):
     return DOA
 
 def compute_DOA(contributions:pd.DataFrame)->pd.DataFrame:
+    """Computes the Degree Of Authorship of each author for each file
+
+    Args:
+        contributions (pd.DataFrame): contributions dataframe (Obtained from create_contribution_dataframe function)
+
+    Returns:
+        pd.DataFrame: Dataframe representing the the DOA distribution
+    """
     if contributions.empty:
         return contributions
     #DOA=3.293 + 1.098 × FA(md, fp) + 0.164×DL(md, fp) − 0.321 × ln(1 + AC (md, fp))
@@ -78,6 +86,21 @@ def compute_DOA(contributions:pd.DataFrame)->pd.DataFrame:
     return per_author_df
 
 def compute_truck_factor(repo:str,orphan_files_threashold:float=0.5,authorship_threshold:float=0.7)->int:
+    """Compute the truck factor from a git repository
+
+    Args:
+        repo (str): The path to the repository
+        orphan_files_threashold (float, optional): Value between 0 and 1 which determines when to stop calculating the truck factor. 1 means all files must be orphans, 0 no file must be orphan. Defaults to 0.5.
+        authorship_threshold (float, optional):  Value between 0 and 1 which determines the value from which an author with a normalized DOA over a file can be considered a major file contributor. Defaults to 0.7.
+
+    Raises:
+        ValueError: Whether the thresholds are not in the range limit or the repository is not suited for truck factor calculation
+        Exception: If git CLI is not on PATH
+        ValueError: If submitted repo does not point to a git repository
+
+    Returns:
+        int: The integer representing the truck factor for the repository
+    """
     if not( (orphan_files_threashold >0 and orphan_files_threashold <=1 ) and (authorship_threshold >0 and authorship_threshold <=1 )):
         raise ValueError("All threshold values must have a value between 0 and 1")
     #https://arxiv.org/abs/1604.06766
@@ -86,15 +109,28 @@ def compute_truck_factor(repo:str,orphan_files_threashold:float=0.5,authorship_t
     if not is_dir_a_repo(repo):
         raise ValueError(f"Path {repo} is not a git directory")
     df=create_contribution_dataframe(repo)
-    return compute_truck_factor_from_contributions
-    
-def compute_truck_factor_from_contributions(df:pd.DataFrame,orphan_files_threashold:float=0.5,authorship_threshold:float=0.7)->int:
     if not( (orphan_files_threashold >0 and orphan_files_threashold <=1 ) and (authorship_threshold >0 and authorship_threshold <=1 )):
         raise ValueError("All threshold values must have a value between 0 and 1")
     #https://arxiv.org/abs/1604.06766
     if df.empty:
         raise ValueError("Repository not suited for truck factor calculation, no source code found")
     df=compute_DOA(df)
+    return compute_truck_factor_from_contributions(df)
+    
+def compute_truck_factor_from_contributions(df:pd.DataFrame,orphan_files_threashold:float=0.5,authorship_threshold:float=0.7)->int:
+    """Compute the truck factor from a contribution dataframe (Look at compute_DOA function)
+
+    Args:
+        df (pd.DataFrame): contribution dataframe
+        orphan_files_threashold (float, optional): Value between 0 and 1 which determines when to stop calculating the truck factor. 1 means all files must be orphans, 0 no file must be orphan. Defaults to 0.5.
+        authorship_threshold (float, optional):  Value between 0 and 1 which determines the value from which an author with a normalized DOA over a file can be considered a major file contributor. Defaults to 0.7.
+
+    Raises:
+        ValueError: Whether the thresholds are not in the range limit or the repository is not suited for truck factor calculation
+
+    Returns:
+        int: The integer representing the truck factor for the repository
+    """
     df=df.loc[df["DOA"]>=authorship_threshold]
     orig_size=len(df["fname"].unique())
     quorum=orig_size*orphan_files_threashold

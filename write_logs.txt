@@ -1,4 +1,10 @@
 Gerardo De Luisi|2025-04-13
+7	2	src/truck_factor_gdeluisi/main.py
+1	0	test_logs.json
+1	0	test_logs.txt
+123	0	write_logs.txt
+
+Gerardo De Luisi|2025-04-13
 1	1	src/truck_factor_gdeluisi/helper.py
 2	2	src/truck_factor_gdeluisi/main.py
 
@@ -119,5 +125,4 @@ GeggeDL|2025-04-10
 174	0	.gitignore
 21	0	LICENSE
 1	0	README.md
-
 
