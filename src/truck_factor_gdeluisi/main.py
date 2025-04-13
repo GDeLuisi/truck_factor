@@ -21,9 +21,9 @@ def _filter_dead_files(df:pd.DataFrame,current_files:Iterable[str])->pd.DataFram
 def _filter_files_of_interest(df:pd.DataFrame):
     files=df["fname"].unique()
     exts=infer_programming_language(files)
-    print(exts)
+    # print(exts)
     exts=resolve_programming_languages(exts)
-    print(exts)
+    # print(exts)
     tmp_df=df.copy()
     tmp_df["ext"]=df["fname"].apply(lambda f: "."+f.rsplit(".",1)[1] if len(f.rsplit(".",1))>1 else "")
     tmp_df=tmp_df.loc[tmp_df["ext"].isin(exts)]

@@ -64,7 +64,7 @@ def get_aliases(path:str,commit_sha:Optional[str]=None)->dict[str]:
             _,old,new=b.split("\t")
             alias_map[old]=new.strip("\n")
         except ValueError:
-            print([b])
+            # print([b])
             return dict()
     final_alias_map=dict()
     for k,v in alias_map.items():
