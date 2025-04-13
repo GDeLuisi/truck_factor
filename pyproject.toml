@@ -1,6 +1,6 @@
 [project]
 name = "truck-factor-gdeluisi"
-version = "0.1.0"
+version = "__VERSION__"
 description = "Add your description here"
 readme = "README.md"
 authors = [
