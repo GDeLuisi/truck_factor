@@ -7,17 +7,18 @@ import subprocess
 from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 
 git_repos=[
-            # (Path.cwd().as_posix(),True),
-            # (Path.cwd().parent.as_posix(),False),
+            (Path.cwd().as_posix(),True),
+            (Path.cwd().parent.as_posix(),False),
             (Path.cwd().parent.joinpath("project_visualization_tool").as_posix(),True),
-            (Path.cwd().parent.joinpath("pandas").as_posix(),True)
+            (Path.cwd().parent.joinpath("pandas").as_posix(),True),
+            (Path.cwd().parent.joinpath("emacs-theme-gruvbox").as_posix(),True)
         ]
 
 logger=getLogger()
 @mark.parametrize("path,expected",git_repos)
 def test_write_logs(path,expected):
     if expected:
-        with open("./write_logs.txt","w") as f:
+        with open("./write_logs.txt","w",encoding="utf-8") as f:
             print(write_logs(path,"HEAD"),file=f)
         assert True
     else:
@@ -116,12 +117,28 @@ def test_infer_programming_language():
     exts=resolve_programming_languages(exts)
     assert exts=={".py"}
 
-def test_parse_logs():
+@mark.parametrize("path,expected",git_repos)
+def test_parse_logs(path,expected):
     # commit="0cb8f542538a6a53c8646da7d171e5bfec40ac1a"
-    commit="HEAD"
-    res_df=parse_logs(write_logs(Path.cwd().as_posix(),commit))
-    # res_df=parse_logs(write_logs(Path.cwd().parent.joinpath("pandas").as_posix(),commit))
-    
-    with open("./test_logs.json","w",encoding="utf-8") as f:
-        print(res_df,file=f)
-    assert True
+    if expected:
+        commit="HEAD"
+        res_df=parse_logs(write_logs(path,commit))
+        # res_df=parse_logs(write_logs(Path.cwd().parent.joinpath("pandas").as_posix(),commit))
+        
+        with open("./test_logs.json","w",encoding="utf-8") as f:
+            print(res_df,file=f)
+        assert True
+        
+    else:
+        with raises(Exception):
+            parse_logs(write_logs(Path.cwd().as_posix(),commit))
+            
+            
+@mark.parametrize("path,expected",git_repos)
+def test_repo_is_empty(path,expected):
+    if expected:
+        assert not is_repo_empty(path)
+    else:
+        with raises(Exception):
+            is_repo_empty(path)
+            

@@ -209,8 +209,8 @@ def create_batches(it:Iterable,n:int)->Iterable[Iterable]:
 
 def parse_block(block:str)->list[dict[str]]:
     contributions=dict()
-    tmp=block.split("\n",1)
-    if len(tmp)==1:
+    tmp=block.strip("\n").split("\n",1)
+    if len(tmp)<=1:
         return []
     c_line,stat_block=tmp
     author,date=c_line.split("|")
@@ -242,24 +242,20 @@ def parse_logs(logs:str)->list[dict[str]]:
         contributions.extend(r)
     return contributions
 
-def infer_programming_language(files:Iterable[str],threshold:float=0.35)->set[str]:
-        suffix_count:dict[str,int]=dict()
+def is_repo_empty(path:str):
+    repo=Path(path).resolve().as_posix()
+    return subprocess.check_call(f"git -C {repo} rev-parse HEAD") != 0
+def infer_programming_language(files:Iterable[str])->set[str]:
         fs=set(files)
-        tot_files=len(fs)
         ret_suffixes=set()
         for file in fs:
             try:
                 suffix=file.rsplit(".",maxsplit=1)[1]
-                if suffix not in suffix_count:
-                    suffix_count[suffix]=0
-                suffix_count[suffix]+=1
+                ret_suffixes.add("." +suffix)
             except IndexError:
                 pass
-        for suff,count in suffix_count.items():
-            if float(count/tot_files) >= threshold:
-                ret_suffixes.add("."+suff)
         return ret_suffixes
-    
+
 def resolve_programming_languages(exts:Iterable[str])->set[str]:
     config_file=Path(__file__).parent.joinpath("data","ext.json")
     with config_file.open("r") as f:

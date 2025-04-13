@@ -7,10 +7,11 @@ import subprocess
 from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 
 git_repos=[
-            # (Path.cwd().as_posix(),True),
-            # (Path.cwd().parent.as_posix(),False),
-            # (Path.cwd().parent.joinpath("project_visualization_tool").as_posix(),True),
-            (Path.cwd().parent.joinpath("pandas").as_posix(),True)
+            (Path.cwd().as_posix(),True),
+            (Path.cwd().parent.as_posix(),False),
+            (Path.cwd().parent.joinpath("project_visualization_tool").as_posix(),1),
+            (Path.cwd().parent.joinpath("pandas").as_posix(),True),
+            (Path.cwd().parent.joinpath("emacs-theme-gruvbox").as_posix(),True)
         ]
 @mark.parametrize("path,expected",git_repos)
 def test_contribution_df(path,expected):
@@ -22,4 +23,17 @@ def test_contribution_df(path,expected):
     else:
         with raises(Exception):
             create_contribution_dataframe(path)
-    
+
+@mark.parametrize("path,expected",git_repos)
+def test_compute_tf(path,expected):
+    if expected:
+        # current_files=set(subprocess.check_output(f"git -C {path} ls-files",shell=True).decode()[:-1].split('\n'))
+        # df=create_contribution_dataframe(path)
+        # df.info()
+        # assert set(df["fname"].to_list()).issubset(current_files)
+        tf=compute_truck_factor(path)
+        print(tf)
+        # assert tf == expected
+    else:
+        with raises(Exception):
+            compute_DOA(create_contribution_dataframe(path))
