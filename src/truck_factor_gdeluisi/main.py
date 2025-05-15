@@ -18,7 +18,7 @@ def _filter_dead_files(df:pd.DataFrame,current_files:Iterable[str])->pd.DataFram
     new_df=df.loc[df["fname"].isin(current_files)]
     return new_df
 
-def _filter_files_of_interest(df:pd.DataFrame):
+def filter_files_of_interest(df:pd.DataFrame):
     files=df["fname"].unique()
     exts=infer_programming_language(files)
     # print(exts)
@@ -30,7 +30,7 @@ def _filter_files_of_interest(df:pd.DataFrame):
     tmp_df.reset_index(drop=True,inplace=True)
     return tmp_df
 
-def create_contribution_dataframe(repo:str)->pd.DataFrame:
+def create_contribution_dataframe(repo:str,only_of_files=True)->pd.DataFrame:
     contributions=parse_logs(write_logs(repo))
     df=pd.DataFrame(contributions)
     df["date"]=pd.to_datetime(df["date"])
@@ -38,8 +38,8 @@ def create_contribution_dataframe(repo:str)->pd.DataFrame:
     df=_resolve_aliases(df,alias_map)
     current_files=set(subprocess.check_output(f"git -C {repo} ls-files",shell=True).decode()[:-1].split('\n'))
     df=_filter_dead_files(df,current_files)
-    df=_filter_files_of_interest(df)
-    df.sort_values("date",inplace=True)
+    if only_of_files:
+        df=filter_files_of_interest(df)
     return df
 
 def _compute_DOA(row:pd.Series,kwargs:dict):
@@ -64,7 +64,8 @@ def compute_DOA(contributions:pd.DataFrame)->pd.DataFrame:
     if contributions.empty:
         return contributions
     #DOA=3.293 + 1.098 × FA(md, fp) + 0.164×DL(md, fp) − 0.321 × ln(1 + AC (md, fp))
-    df=contributions.groupby(["fname","author","date"]).sum().reset_index(drop=False)
+    df=contributions.sort_values("date")
+    df=df.groupby(["fname","author","date"]).sum().reset_index(drop=False)
     #drop all 0 contributions
     df=df.loc[df["tot_contributions"]!=0]
     df["DOA"]=0

@@ -1,4 +1,17 @@
 Gerardo De Luisi|2025-04-13
+0	2	pyproject.toml
+
+Gerardo De Luisi|2025-04-13
+2	1	README.md
+12	1	pyproject.toml
+
+Gerardo De Luisi|2025-04-13
+39	3	src/truck_factor_gdeluisi/main.py
+1	1	test_logs.json
+1	1	test_logs.txt
+6	1	write_logs.txt
+
+Gerardo De Luisi|2025-04-13
 7	2	src/truck_factor_gdeluisi/main.py
 1	0	test_logs.json
 1	0	test_logs.txt
@@ -125,4 +138,7 @@ GeggeDL|2025-04-10
 174	0	.gitignore
 21	0	LICENSE
 1	0	README.md
+
+
+
 
