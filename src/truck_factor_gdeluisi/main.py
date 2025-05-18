@@ -3,16 +3,6 @@ from tempfile import gettempdir
 from .helper import *
 import pandas as pd
 from math import log1p
-def _resolve_aliases(df:pd.DataFrame,aliases:dict)->pd.DataFrame:
-    new_df=df
-    # new_df.info()
-    # print(new_df["fname"].head())
-    for alias,value in aliases.items():
-        try:
-            new_df.replace({"fname":alias},value,inplace=True)
-        except KeyError:
-            continue
-    return new_df
 
 def _filter_dead_files(df:pd.DataFrame,current_files:Iterable[str])->pd.DataFrame:
     new_df=df.loc[df["fname"].isin(current_files)]
@@ -35,7 +25,7 @@ def create_contribution_dataframe(repo:str,only_of_files=True)->pd.DataFrame:
     df=pd.DataFrame(contributions)
     df["date"]=pd.to_datetime(df["date"])
     alias_map=get_aliases(repo)
-    df=_resolve_aliases(df,alias_map)
+    df.replace(alias_map,inplace=True)
     current_files=set(subprocess.check_output(f"git -C {repo} ls-files",shell=True).decode()[:-1].split('\n'))
     df=_filter_dead_files(df,current_files)
     if only_of_files:
