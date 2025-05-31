@@ -152,7 +152,7 @@ def count_commits(path:str,commit_sha:Optional[str]=None)->int:
     head=commit_sha
     if not commit_sha:
         head=get_head_commit(path)
-    cmd=_cmd_builder("rev-list",repo,head, "--count", "--all" ,"--no-merges")
+    cmd=_cmd_builder("rev-list",repo,head, "--count", "--all")
     return int(subprocess.check_output(cmd,shell=True).decode()[:-1])
     
 
