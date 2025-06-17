@@ -21,24 +21,23 @@ def filter_files_of_interest(df:pd.DataFrame):
     return tmp_df
 
 def create_contribution_dataframe(repo:str,only_of_files=True)->pd.DataFrame:
-    contributions=parse_logs(write_logs(repo))
+    with ThreadPoolExecutor(max_workers=max_worker) as executor:
+        logs=executor.submit(write_logs,repo)
+        alias_map=executor.submit(get_aliases,repo)
+        current_files=set(subprocess.check_output(f"git -C {repo} ls-files",shell=True).decode()[:-1].split('\n'))
+    contributions=parse_logs(logs.result())
     df=pd.DataFrame(contributions)
     df["date"]=pd.to_datetime(df["date"])
-    alias_map=get_aliases(repo)
-    df.replace(alias_map,inplace=True)
-    current_files=set(subprocess.check_output(f"git -C {repo} ls-files",shell=True).decode()[:-1].split('\n'))
+    df.replace(alias_map.result(),inplace=True)
     df=_filter_dead_files(df,current_files)
     if only_of_files:
         df=filter_files_of_interest(df)
     return df
 
-def _compute_DOA(row:pd.Series,kwargs:dict):
-    files_fa=kwargs["files_fa"]
-    files_contr=kwargs["files_contr"]
-    fname=row["fname"]
-    FA=1 if files_fa[fname] == row["author"] else 0
+def _compute_DOA(row:pd.Series):
     DL=row["tot_contributions"]
-    AC=files_contr[fname] - DL
+    FA=1 if row["author"] == row["author_FA"] else 0
+    AC=row["tot_contributions_TOT"] - DL
     DOA=3.293 + 1.098 *  FA + 0.164* DL - 0.321 *  log1p(AC)
     return DOA
 
@@ -61,19 +60,12 @@ def compute_DOA(contributions:pd.DataFrame)->pd.DataFrame:
     df["DOA"]=0
     tracked_files=df["fname"].unique()
     per_author_df=df.groupby(["fname","author"]).sum(True).reset_index(drop=False)
-    per_file_df=per_author_df.groupby(["fname"]).sum(True).reset_index(drop=False)
-    files_contr:dict[str,int]=dict()
-    files_fa:dict[str,str]=dict()
-    for f in tracked_files:
-        author=df.loc[df["fname"]==f]["author"].iloc[0]
-        files_fa[f]=author
-        files_contr[f]=per_file_df.loc[per_file_df["fname"]==f]["tot_contributions"].iloc[0]
-    per_author_df["DOA"]=per_author_df.apply(_compute_DOA,axis=1,kwargs=dict(files_fa=files_fa,files_contr=files_contr))
-    for f in tracked_files:
-        max_doa=per_author_df.loc[per_author_df["fname"]==f]["DOA"].max()
-        mask=per_author_df["fname"].eq(f)
-        normalized_doas=per_author_df.loc[per_author_df["fname"]==f]["DOA"].apply(lambda v: v/max_doa)
-        per_author_df.loc[mask,"DOA"]=normalized_doas
+    per_file_df=per_author_df.groupby(["fname"]).sum(True)
+    first_authors=df.groupby("fname").first()
+    per_author_df_tmp=per_author_df.set_index("fname").join(first_authors,rsuffix="_FA",on="fname")
+    per_author_df_tmp=per_author_df_tmp.join(per_file_df,rsuffix="_TOT",on="fname").reset_index(inplace=False)
+    per_author_df["DOA"]=per_author_df_tmp.apply(_compute_DOA,axis=1)
+    per_author_df["DOA"]=per_author_df.groupby("fname",as_index=False)["DOA"].transform(lambda x: x/x.max())
     return per_author_df
 
 def compute_truck_factor(repo:str,orphan_files_threashold:float=0.5,authorship_threshold:float=0.7)->int:
