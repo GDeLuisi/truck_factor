@@ -99,7 +99,7 @@ def _cmd_builder(command:str,repo:str,*args)->str:
     Returns:
         str: The complete command as a string
     """
-    arg_string=f"git -C {repo} {command}"
+    arg_string=f"git -C \"{repo}\" {command}"
     arg_string=arg_string + " "+ " ".join(args)
     return arg_string
 
@@ -189,7 +189,7 @@ def get_head_commit(path:str)->str:
     Returns:
         str: Returns HEAD's commit sha
     """
-    cmd = f"git -C {Path(path).resolve().as_posix()} rev-parse HEAD"
+    cmd = f"git -C \"{Path(path).resolve().as_posix()}\" rev-parse HEAD"
     return subprocess.check_output(cmd,shell=True).decode()[:-1]
 
 def create_batches(it:Iterable,n:int)->Iterable[Iterable]:

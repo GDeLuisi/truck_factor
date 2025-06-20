@@ -24,7 +24,7 @@ def create_contribution_dataframe(repo:str,only_of_files=True)->pd.DataFrame:
     with ThreadPoolExecutor(max_workers=max_worker) as executor:
         logs=executor.submit(write_logs,repo)
         alias_map=executor.submit(get_aliases,repo)
-        current_files=set(subprocess.check_output(f"git -C {repo} ls-files",shell=True).decode()[:-1].split('\n'))
+        current_files=set(subprocess.check_output(f"git -C \"{repo}\" ls-files",shell=True).decode()[:-1].split('\n'))
     contributions=parse_logs(logs.result())
     df=pd.DataFrame(contributions)
     df["date"]=pd.to_datetime(df["date"])
